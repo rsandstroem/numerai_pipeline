@@ -1,0 +1,3 @@
+joblib==0.13.2
+numerox==4.0.0
+numpy==1.17.0

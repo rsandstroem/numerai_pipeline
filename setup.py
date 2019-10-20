@@ -3,6 +3,12 @@ import sys, os
 
 version = '0.1'
 
+with open('README.md', 'r') as fh:
+    LONG_DESCRIPTION = fh.read()
+
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
+
 setup(name='numerai_pipeline',
       version=version,
       description="End-to-end pipeline for Numerai competition",
@@ -17,9 +23,7 @@ Long desc""",
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=[
-          # -*- Extra requirements: -*-
-      ],
+      install_requires=REQUIREMENTS,
       entry_points="""
       # -*- Entry points: -*-
       """,
