@@ -1,4 +1,4 @@
-#! /home/rikard/anaconda3/envs/numerai_kazutsugi python
+#!/usr/bin/env python
 # coding: utf-8
 from pathlib import Path
 import sys

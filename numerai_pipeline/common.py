@@ -1,4 +1,4 @@
-#! /home/rikard/anaconda3/envs/numerai_kazutsugi python
+#!/usr/bin/env python
 # coding: utf-8
 import numpy as np
 import pandas as pd
@@ -7,7 +7,7 @@ from pathlib import Path
 TOURNAMENT_NAME = "kazutsugi"
 TARGET_NAME = f"target_{TOURNAMENT_NAME}"
 PREDICTION_NAME = f"prediction_{TOURNAMENT_NAME}"
-PROJECT_PATH = Path("your path")
+PROJECT_PATH = Path("your folder")
 
 BENCHMARK = 0.002
 BAND = 0.04
