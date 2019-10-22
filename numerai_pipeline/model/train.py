@@ -7,7 +7,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
-from numerai_pipeline.common import *
+from numerai_pipeline import common
 
 
 def train_lgb(X_train, y_train):
@@ -37,7 +37,7 @@ def train_linear(X_train, y_train):
     linear = linear_model.LinearRegression()
     linear.fit(X_train, y_train)
     print(f'linear model training score: {linear.score(X_train, y_train)}')
-    joblib.dump(linear, PROJECT_PATH / 'models' / 'linear.pkl')
+    joblib.dump(linear, common.PROJECT_PATH / 'models' / 'linear.pkl')
     return linear
 
 
@@ -46,7 +46,7 @@ def main():
     [summary]
     """
     print("# Loading data...")
-    data_folder = PROJECT_PATH / 'data'
+    data_folder = common.PROJECT_PATH / 'data'
     # The training data is used to train your model how to predict the targets.
     training_data = pd.read_csv(
         data_folder / 'numerai_training_data.csv').set_index("id")
@@ -57,19 +57,20 @@ def main():
 
     model = train_linear(
         training_data[feature_names].values,
-        training_data[TARGET_NAME].values)
+        training_data[common.TARGET_NAME].values)
 
     print("Generating predictions")
-    training_data[PREDICTION_NAME] = model.predict(
+    training_data[common.PREDICTION_NAME] = model.predict(
         training_data[feature_names].values)
 
     # Check the per-era correlations on the training set
-    train_correlations = training_data.groupby("era").apply(score)
+    train_correlations = training_data.groupby("era").apply(common.score)
     print(
         f"On training the correlation = {train_correlations.mean()} +- {train_correlations.std()}")
     print(
-        f"On training the average per-era payout is {payout(train_correlations).mean()}")
+        f"On training the average per-era payout is {common.payout(train_correlations).mean()}")
     print('...done!')
+
 
 if __name__ == '__main__':
     main()
