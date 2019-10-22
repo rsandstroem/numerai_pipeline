@@ -76,7 +76,7 @@ def train(model_name):
         model = train_linear(
             training_data[feature_names].values,
             training_data[common.TARGET_NAME].values)
-    elif model_name == 'xbg':
+    elif model_name == 'xgb':
         model = train_xgb(
             training_data[feature_names].values,
             training_data[common.TARGET_NAME].values)
