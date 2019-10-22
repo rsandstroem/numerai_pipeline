@@ -1,6 +1,8 @@
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
+from numerai_pipeline.model import train, predict
 
 default_args = {
     'owner': 'airflow',
@@ -19,14 +21,14 @@ default_args = {
 
 dag = DAG('numerai_pipeline', default_args=default_args, schedule_interval=timedelta(days=1))
 
-t1 = BashOperator(
+t1 = PythonOperator(
     task_id='train',
-    bash_command='python /home/rikard/WORK/numerai_kazutsugi/src/numerai_pipeline/model/train.py',
+    python_callable=train.main,
     dag=dag)
 
-t2 = BashOperator(
+t2 = PythonOperator(
     task_id='predict',
-    bash_command='python /home/rikard/WORK/numerai_kazutsugi/src/numerai_pipeline/model/predict.py',
+    python_callable=predict.main,
     dag=dag)
 
 t1 >> t2

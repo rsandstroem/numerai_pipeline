@@ -3,7 +3,7 @@
 from pathlib import Path
 import json
 import numerox as nx
-import common
+from numerai_pipeline import common
 
 
 def main():
@@ -11,10 +11,12 @@ def main():
     with open('authentication.json', "r") as credentials_file:
         credentials = json.load(credentials_file)[user]
 
+    data_folder = common.PROJECT_PATH / 'data'
     filename = common.TOURNAMENT_NAME + '_submission.csv'
     print(f'Submitting {filename} for user {user}')
     nx.upload(
-        filename,
+        data_folder /
+        (common.TOURNAMENT_NAME + "_submission.csv"),
         tournament=common.TOURNAMENT_NAME,
         public_id=credentials['id'],
         secret_key=credentials['key']

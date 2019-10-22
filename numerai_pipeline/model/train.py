@@ -7,7 +7,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
-from common import *
+from numerai_pipeline.common import *
 
 
 def train_lgb(X_train, y_train):

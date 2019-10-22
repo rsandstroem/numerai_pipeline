@@ -1,3 +1,5 @@
-joblib==0.13.2
-numerox==4.0.0
-numpy==1.17.0
+apache-airflow>=1.10.5
+joblib>=0.13.2
+lightgbm>=2.2.3
+numerox>=4.0.0
+numpy>=1.17.0
