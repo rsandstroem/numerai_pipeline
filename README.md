@@ -38,11 +38,18 @@ To submit the results, you will need to provide authentication details. To simpl
 }
 ```
 
+To run manually:
+`submit.py -m your_model -u username`
+
 ## How to run airflow 
 Airflow is used to define the pipeline, and schedule the tasks, so you can forget about it and spend time on other things.
 
-Host the graphical interface: `airflow webserver -p 8080`
+After installing Airflow (included in requirements of this package),initialize the database: `airflow initdb`
+
+Modify `dags_folder` in your `airflow.cfg` to point to the `dag` folder of this package. It should then pick up any DAGs that are found inside that folder.
 
 Start the scheduler: `airflow scheduler`
 
-Backfill missing dates: `airflow backfill numerai_pipeline -s 2019-10-17 -e 2019-10-20`
+Backfill some missing dates: `airflow backfill numerai_pipeline -s 2019-10-17 -e 2019-10-20`
+
+Host the graphical interface: `airflow webserver -p 8080`
