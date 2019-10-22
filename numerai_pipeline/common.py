@@ -7,7 +7,7 @@ from pathlib import Path
 TOURNAMENT_NAME = "kazutsugi"
 TARGET_NAME = f"target_{TOURNAMENT_NAME}"
 PREDICTION_NAME = f"prediction_{TOURNAMENT_NAME}"
-PROJECT_PATH = Path("/home/rikard/WORK/numerai_kazutsugi")
+PROJECT_PATH = Path("your path")
 
 BENCHMARK = 0.002
 BAND = 0.04
