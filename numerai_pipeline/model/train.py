@@ -55,25 +55,14 @@ def train_xgb(X_train, y_train):
     return model
 
 
-def main(argv):
-    """
-    [summary]
-    """
-    model_name = ''
-    try:
-        opts, args = getopt.getopt(argv, "hm:", ["model="])
-    except getopt.GetoptError:
-        print('train.py -m <model_name>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('train.py -m <model_name>')
-            sys.exit()
-        elif opt in ("-m", "--model"):
-            model_name = arg
-    print(f'Model is {model_name}')
+def train(model_name):
+    """Train the model and writes the trained model to the model folder. 
 
-    print("# Loading data...")
+    Arguments:
+        model_name {str} -- Name of the model to train. Must be a valid option implemented in the code.
+    """
+    print(f'Model is {model_name}')
+    print("Loading data...")
     data_folder = common.PROJECT_PATH / 'data'
     # The training data is used to train your model how to predict the targets.
     training_data = pd.read_csv(
@@ -106,6 +95,25 @@ def main(argv):
     print(
         f"On training the average per-era payout is {common.payout(train_correlations).mean()}")
     print('...done!')
+
+
+def main(argv):
+    """
+    [summary]
+    """
+    model_name = ''
+    try:
+        opts, args = getopt.getopt(argv, "hm:", ["model="])
+    except getopt.GetoptError:
+        print('train.py -m <model_name>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('train.py -m <model_name>')
+            sys.exit()
+        elif opt in ("-m", "--model"):
+            model_name = arg
+    train(model_name)
 
 
 if __name__ == '__main__':

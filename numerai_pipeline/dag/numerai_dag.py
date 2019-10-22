@@ -23,24 +23,47 @@ default_args = {
 dag = DAG('numerai_pipeline', default_args=default_args,
           schedule_interval=timedelta(days=1))
 
-t0 = PythonOperator(
+obtain = PythonOperator(
     task_id='obtain',
     python_callable=obtain.main,
     dag=dag)
 
-t1a = PythonOperator(
-    task_id='train',
-    python_callable=train.main,
+train_a = PythonOperator(
+    task_id='train_lin',
+    python_callable=train.train,
+    op_kwargs={'model_name': 'linear'},
     dag=dag)
 
-t2a = PythonOperator(
-    task_id='predict',
-    python_callable=predict.main,
+train_b = PythonOperator(
+    task_id='train_xgb',
+    python_callable=train.train,
+    op_kwargs={'model_name': 'xgb'},
     dag=dag)
 
-t3a = PythonOperator(
-    task_id='submit',
-    python_callable=submit.main,
+predict_a = PythonOperator(
+    task_id='predict_lin',
+    python_callable=predict.predict,
+    op_kwargs={'model_name': 'linear'},
     dag=dag)
 
-t0 >> t1a >> t2a >> t3a
+predict_b = PythonOperator(
+    task_id='predict_xgb',
+    python_callable=predict.predict,
+    op_kwargs={'model_name': 'xgb'},
+    dag=dag)
+
+submit_a = PythonOperator(
+    task_id='submit_lin',
+    python_callable=submit.submit,
+    op_kwargs={'model_name': 'linear', 'user': 'rsai'},
+    dag=dag)
+
+submit_b = PythonOperator(
+    task_id='submit_xgb',
+    python_callable=submit.submit,
+    op_kwargs={'model_name': 'xgb', 'user': 'rsai2'},
+    dag=dag)
+
+# Setting dependencies
+obtain >> train_a >> predict_a >> submit_a
+obtain >> train_b >> predict_b >> submit_b

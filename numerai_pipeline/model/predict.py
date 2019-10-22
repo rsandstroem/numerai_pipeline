@@ -8,26 +8,14 @@ import pandas as pd
 from numerai_pipeline import common
 
 
-def main(argv):
-    """
-    [summary]
-    """
-    model_name = ''
-    try:
-        opts, args = getopt.getopt(argv,"hm:",["model="])
-    except getopt.GetoptError:
-        print('predict.py -m <model_name>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('predict.py -m <model_name>')
-            sys.exit()
-        elif opt in ("-m", "--model"):
-            model_name = arg
-    print (f'Model is {model_name}')
+def predict(model_name):
+    """Predicts target for the tournament data using the specified model.
 
-
-    print("# Loading data...")
+    Arguments:
+        model_name {str} -- Name of the trained model. 
+    """
+    print(f'Model is {model_name}')
+    print("Loading data...")
     data_folder = common.PROJECT_PATH / 'data'
     # The tournament data is the data that Numerai uses to evaluate your model.
     tournament_data = pd.read_csv(
@@ -37,7 +25,8 @@ def main(argv):
     print(f'Loaded {len(feature_names)} features')
 
     try:
-        model = joblib.load(common.PROJECT_PATH / 'models' / f'{model_name}.pkl')
+        model = joblib.load(common.PROJECT_PATH /
+                            'models' / f'{model_name}.pkl')
     except:
         print(f'Model {model_name}.pkl not found')
         exit(2)
@@ -61,6 +50,25 @@ def main(argv):
         header=True)
     # Now you can upload these predictions on https://numer.ai
     print('...done!')
+
+
+def main(argv):
+    """
+    [summary]
+    """
+    model_name = ''
+    try:
+        opts, args = getopt.getopt(argv, "hm:", ["model="])
+    except getopt.GetoptError:
+        print('predict.py -m <model_name>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('predict.py -m <model_name>')
+            sys.exit()
+        elif opt in ("-m", "--model"):
+            model_name = arg
+    predict(model_name)
 
 
 if __name__ == '__main__':
