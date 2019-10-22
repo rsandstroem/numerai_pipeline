@@ -2,6 +2,7 @@
 from pathlib import Path
 import zipfile
 import numerox as nx
+from numerai_pipeline import common
 
 
 def main():
@@ -11,7 +12,7 @@ def main():
     """
     print('Obtaining data...')
 
-    data_folder = Path('data')
+    data_folder = common.PROJECT_PATH / 'data'
     filename = 'numerai_dataset.zip'
 
     # download dataset from numerai

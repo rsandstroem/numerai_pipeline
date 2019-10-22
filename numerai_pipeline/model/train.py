@@ -1,12 +1,14 @@
 #! /home/rikard/anaconda3/envs/numerai_kazutsugi python
 # coding: utf-8
 from pathlib import Path
-
+import sys
+import getopt
 import joblib
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+from xgboost import XGBRegressor
 from numerai_pipeline import common
 
 
@@ -34,6 +36,7 @@ def train_lgb(X_train, y_train):
 
 
 def train_linear(X_train, y_train):
+    print('Training linear model')
     linear = linear_model.LinearRegression()
     linear.fit(X_train, y_train)
     print(f'linear model training score: {linear.score(X_train, y_train)}')
@@ -41,10 +44,35 @@ def train_linear(X_train, y_train):
     return linear
 
 
-def main():
+def train_xgb(X_train, y_train):
+    print('Training XGB model')
+    # For faster experimentation you can decrease n_estimators to 200, for better performance increase to 20,000
+    model = XGBRegressor(max_depth=5, learning_rate=0.01,
+                         n_estimators=2000, n_jobs=-1, colsample_bytree=0.1)
+    model.fit(X_train, y_train)
+    print(f'xgb model training score: {model.score(X_train, y_train)}')
+    joblib.dump(model, common.PROJECT_PATH / 'models' / 'xgb.pkl')
+    return model
+
+
+def main(argv):
     """
     [summary]
     """
+    model_name = ''
+    try:
+        opts, args = getopt.getopt(argv, "hm:", ["model="])
+    except getopt.GetoptError:
+        print('train.py -m <model_name>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('train.py -m <model_name>')
+            sys.exit()
+        elif opt in ("-m", "--model"):
+            model_name = arg
+    print(f'Model is {model_name}')
+
     print("# Loading data...")
     data_folder = common.PROJECT_PATH / 'data'
     # The training data is used to train your model how to predict the targets.
@@ -55,11 +83,19 @@ def main():
         f for f in training_data.columns if f.startswith("feature")]
     print(f"Loaded {len(feature_names)} features")
 
-    model = train_linear(
-        training_data[feature_names].values,
-        training_data[common.TARGET_NAME].values)
+    if model_name == 'linear':
+        model = train_linear(
+            training_data[feature_names].values,
+            training_data[common.TARGET_NAME].values)
+    elif model_name == 'xbg':
+        model = train_xgb(
+            training_data[feature_names].values,
+            training_data[common.TARGET_NAME].values)
+    else:
+        print(f'Specified model {model_name} not supported')
+        exit(2)
 
-    print("Generating predictions")
+    print('Generating predictions:')
     training_data[common.PREDICTION_NAME] = model.predict(
         training_data[feature_names].values)
 
@@ -73,4 +109,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

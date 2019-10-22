@@ -3,3 +3,4 @@ joblib>=0.13.2
 lightgbm>=2.2.3
 numerox>=4.0.0
 numpy>=1.17.0
+xgboost>=0.90
