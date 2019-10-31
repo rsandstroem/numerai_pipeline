@@ -8,7 +8,7 @@ from numerai_pipeline.transport import obtain, submit
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2019, 10, 1),
+    'start_date': datetime(2019, 10, 27),
     'email': ['airflow@example.com'],
     'email_on_failure': False,
     'email_on_retry': False,
@@ -21,7 +21,7 @@ default_args = {
 }
 
 dag = DAG('numerai_pipeline', default_args=default_args,
-          schedule_interval=timedelta(days=1))
+          schedule_interval=timedelta(days=7))
 
 obtain = PythonOperator(
     task_id='obtain',
