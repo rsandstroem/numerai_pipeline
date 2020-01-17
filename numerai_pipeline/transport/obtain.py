@@ -15,6 +15,10 @@ def main():
 
     data_folder = common.PROJECT_PATH / 'data'
     filename = 'numerai_dataset.zip'
+    file_path = data_folder / filename
+
+    # remove if exists
+    file_path.unlink()
 
     # download dataset from numerai
     napi = numerapi.NumerAPI(verbosity="info")
@@ -24,7 +28,7 @@ def main():
         unzip=False)
 
     # unzip content
-    with zipfile.ZipFile(data_folder / filename, 'r') as zip_ref:
+    with zipfile.ZipFile(file_path, 'r') as zip_ref:
         zip_ref.extractall(data_folder)
 
     print('...done!')
