@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import getopt
 import json
-import numerox as nx
+import numerapi
 from numerai_pipeline import common
 
 
@@ -23,12 +23,17 @@ def submit(model_name, user):
     data_folder = common.PROJECT_PATH / 'data'
     filename = f'{common.TOURNAMENT_NAME}_{model_name}_submission.csv'
     print(f'Submitting {filename} for user {user}')
-    nx.upload(
-        data_folder / filename,
-        tournament=common.TOURNAMENT_NAME,
+
+    napi = numerapi.NumerAPI(
         public_id=credentials['id'],
-        secret_key=credentials['key']
+        secret_key=credentials['key'],
+        verbosity="info"
     )
+    submission_id = napi.upload_predictions(
+        data_folder / filename
+    )
+    # check submission status
+    print(napi.submission_status())
     print('...done!')
 
 
