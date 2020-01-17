@@ -2,7 +2,7 @@
 # coding: utf-8
 from pathlib import Path
 import zipfile
-import numerox as nx
+import numerapi
 from numerai_pipeline import common
 
 
@@ -17,7 +17,11 @@ def main():
     filename = 'numerai_dataset.zip'
 
     # download dataset from numerai
-    nx.download(data_folder / filename, load=False)
+    napi = numerapi.NumerAPI(verbosity="info")
+    napi.download_current_dataset(
+        dest_path=data_folder,
+        dest_filename=filename,
+        unzip=False)
 
     # unzip content
     with zipfile.ZipFile(data_folder / filename, 'r') as zip_ref:
