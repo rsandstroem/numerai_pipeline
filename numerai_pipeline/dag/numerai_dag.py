@@ -29,9 +29,9 @@ obtain = PythonOperator(
     dag=dag)
 
 train_a = PythonOperator(
-    task_id='train_lin',
+    task_id='train_lgb',
     python_callable=train.train,
-    op_kwargs={'model_name': 'linear'},
+    op_kwargs={'model_name': 'lgb'},
     dag=dag)
 
 train_b = PythonOperator(
@@ -41,9 +41,9 @@ train_b = PythonOperator(
     dag=dag)
 
 predict_a = PythonOperator(
-    task_id='predict_lin',
+    task_id='predict_lgb',
     python_callable=predict.predict,
-    op_kwargs={'model_name': 'linear'},
+    op_kwargs={'model_name': 'lgb'},
     dag=dag)
 
 predict_b = PythonOperator(
@@ -53,9 +53,9 @@ predict_b = PythonOperator(
     dag=dag)
 
 submit_a = PythonOperator(
-    task_id='submit_lin',
+    task_id='submit_lgb',
     python_callable=submit.submit,
-    op_kwargs={'model_name': 'linear', 'user': 'rsai'},
+    op_kwargs={'model_name': 'lgb', 'user': 'rsai'},
     dag=dag)
 
 submit_b = PythonOperator(

@@ -13,26 +13,26 @@ from numerai_pipeline import common
 
 
 def train_lgb(X_train, y_train):
-    print('Training model...')
-    params = {}
-    # params['application'] = 'binary'
-    params['boosting_type'] = 'gbdt'
-    # params['n_estimators'] = 10000
-    params['n_estimators'] = 65
-    params['num_threads'] = 4
-    params['num_leaves'] = 11
-    params['min_child_samples'] = 4  # 5
-    params['max_depth'] = 7
-    params['learning_rate'] = 0.03  # 0.01
-    # params['early_stopping_rounds'] = 2
-    params['early_stopping_rounds'] = None
-    params['reg_lambda'] = 21.1  # 1
-    params['reg_alpha'] = 0.648
-    params['metric'] = 'binary_logloss'
+    print('Training LightGBM model')
+    params = {
+        'num_boost_round': 10000,
+        'num_threads': -1,
+        'objective': 'regression',
+        'metric': 'regression',
+        'verbose': -1,
+        'boosting_type': 'gbdt',
+        'learning_rate': 0.03,
+        'num_leaves': 128,
+        'feature_fraction': 0.9,
+        'min_data_in_leaf': 5,
+        'two_round': True,
+        'seed_value': 0,
+    }
 
     d_train = lgb.Dataset(X_train, label=y_train)
-    clf = lgb.train(params, d_train)
-    return clf
+    model = lgb.train(params, d_train)
+    joblib.dump(model, common.PROJECT_PATH / 'models' / 'lgb.pkl')
+    return model
 
 
 def train_linear(X_train, y_train):
@@ -78,6 +78,10 @@ def train(model_name):
             training_data[common.TARGET_NAME].values)
     elif model_name == 'xgb':
         model = train_xgb(
+            training_data[feature_names].values,
+            training_data[common.TARGET_NAME].values)
+    elif model_name == 'lgb':
+        model = train_lgb(
             training_data[feature_names].values,
             training_data[common.TARGET_NAME].values)
     else:
